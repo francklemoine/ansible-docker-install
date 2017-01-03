@@ -1,0 +1,24 @@
+---
+
+- name: install and configure docker
+  hosts: docker
+  roles:
+    - docker
+  tags:
+    - docker-install
+
+
+- name: install and configure docker-compose
+  hosts: docker
+  roles:
+    - docker-compose
+  tags:
+    - docker-compose-install
+
+
+- name: install and configure docker-machine
+  hosts: docker
+  roles:
+    - docker-machine
+  tags:
+    - docker-machine-install

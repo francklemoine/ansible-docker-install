@@ -1,0 +1,106 @@
+---
+# tasks file for docker-compose
+
+- name: uname -s
+  action: shell uname -s
+  register: uname_s
+
+
+- name: uname -m
+  action: shell uname -m
+  register: uname_m
+
+
+- name: remove docker-compose
+  file:
+    path: /usr/local/bin/docker-compose
+    state: absent
+
+
+- name: download docker-compose
+  environment: "{{ proxy_env }}"
+  get_url:
+    url: "https://github.com/docker/compose/releases/download/1.9.0/docker-compose-{{ uname_s.stdout }}-{{ uname_m.stdout }}"
+    dest: "/usr/local/bin/docker-compose"
+    use_proxy: yes
+    validate_certs: no
+    mode: 0555
+
+
+- name: docker-compose version
+  action: shell docker-compose --version | awk 'NR==1{print $NF}'
+  register: compose_ver
+
+
+- name: download docker-compose bash completion
+  environment: "{{ proxy_env }}"
+  ignore_errors: yes
+  get_url:
+    url: "https://raw.githubusercontent.com/docker/compose/{{ compose_ver.stdout }}/contrib/completion/bash/docker-compose"
+    dest: "/etc/bash_completion.d/docker-compose"
+    use_proxy: yes
+    validate_certs: no
+    mode: 0644
+
+
+- name: is zsh installed
+  ignore_errors: yes
+  action: shell which zsh
+  register: is_zsh_here
+
+
+- name: create ~/.zsh directory
+  file:
+    path: "~{{ item }}/.zsh/completion"
+    state: directory
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: 0755
+    recurse: yes
+  with_items:
+    - "{{ zsh_comp_user_list }}"
+  when: is_zsh_here.rc == 0
+
+
+- name: download docker-compose zsh completion
+  environment: "{{ proxy_env }}"
+  ignore_errors: yes
+  get_url:
+    url: "https://raw.githubusercontent.com/docker/compose/{{ compose_ver.stdout }}/contrib/completion/zsh/_docker-compose"
+    dest: "~{{ item }}/.zsh/completion/_docker-compose"
+    use_proxy: yes
+    validate_certs: no
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: 0644
+  with_items:
+    - "{{ zsh_comp_user_list }}"
+  when: is_zsh_here.rc == 0
+
+
+- name: update ~/.zshrc file
+  lineinfile:
+    state: present
+    create: yes
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: 0644
+    dest: "~{{ item }}/.zshrc"
+    line: "fpath=(~/.zsh/completion $fpath)"
+  with_items:
+    - "{{ zsh_comp_user_list }}"
+  when: is_zsh_here.rc == 0
+
+
+- name: update ~/.zshrc file
+  lineinfile:
+    state: present
+    create: yes
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: 0644
+    dest: "~{{ item }}/.zshrc"
+    line: "autoload -Uz compinit && compinit -i"
+  with_items:
+    - "{{ zsh_comp_user_list }}"
+  when: is_zsh_here.rc == 0

@@ -1,0 +1,7 @@
+---
+# default
+
+# proxy connections (mandatory)
+proxy_env:
+  foo: bar
+#  http_proxy: http://x.x.x.x:80

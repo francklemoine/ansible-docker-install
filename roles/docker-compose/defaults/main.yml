@@ -1,0 +1,15 @@
+---
+# default
+
+# proxy connections (mandatory)
+proxy_env:
+  foo: bar
+#  http_proxy: http://x.x.x.x:80
+
+# On Debian Jessie
+apt_list_docker_url: "https://apt.dockerproject.org/repo debian-jessie main"
+# On Ubuntu 15.04
+#apt_list_docker_url: "https://apt.dockerproject.org/repo ubuntu-wily main"
+
+# user concerned by zsh completion (if zsh installed)
+zsh_comp_user_list: [ 'foo' ]

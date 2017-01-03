@@ -1,0 +1,32 @@
+---
+# tasks file for docker-machine
+
+- name: uname -s
+  action: shell uname -s
+  register: uname_s
+
+
+- name: uname -m
+  action: shell uname -m
+  register: uname_m
+
+
+- name: remove docker-machine
+  file:
+    path: /usr/local/bin/docker-machine
+    state: absent
+
+
+- name: download docker-machine
+  environment: "{{ proxy_env }}"
+  get_url:
+    url: "https://github.com/docker/machine/releases/download/v0.8.2/docker-machine-{{ uname_s.stdout }}-{{ uname_m.stdout }}"
+    dest: "/usr/local/bin/docker-machine"
+    use_proxy: yes
+    validate_certs: no
+    mode: 0555
+
+
+#- name: docker-machine version
+#  action: shell docker-machine --version | awk 'NR==1{print $NF}'
+#  register: compose_ver

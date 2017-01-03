@@ -1,0 +1,15 @@
+---
+# default
+
+# proxy connections (mandatory)
+proxy_env:
+  foo: bar
+#  http_proxy: http://x.x.x.x:80
+
+
+# On Debian Jessie
+apt_list_docker_url: "https://apt.dockerproject.org/repo debian-jessie main"
+
+
+# user list to add to the 'docker' group
+user2dockergroup: [ 'foo' ]

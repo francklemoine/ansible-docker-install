@@ -1,6 +1,13 @@
 ---
 # tasks file for docker
 
+
+# For future Ansible Docker facilities
+- name: install docker-py
+  environment: "{{ proxy_env }}"
+  pip: name=docker-py extra_args='--user'
+
+
 - name: purge any older 'lxc-docker*' packages
   ignore_errors: yes
   apt: name='lxc-docker*' force=yes purge=yes state=absent

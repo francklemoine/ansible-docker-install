@@ -20,7 +20,7 @@
 - name: download docker-compose
   environment: "{{ proxy_env }}"
   get_url:
-    url: "https://github.com/docker/compose/releases/download/1.9.0/docker-compose-{{ uname_s.stdout }}-{{ uname_m.stdout }}"
+    url: "https://github.com/docker/compose/releases/download/1.11.2/docker-compose-{{ uname_s.stdout }}-{{ uname_m.stdout }}"
     dest: "/usr/local/bin/docker-compose"
     use_proxy: yes
     validate_certs: no

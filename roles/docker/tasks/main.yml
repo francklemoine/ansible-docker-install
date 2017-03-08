@@ -81,7 +81,7 @@
     line: "{{ item }}"
   with_items:
     - "[Service]"
-    - "Environment=\"HTTP_PROXY={{ proxy_env['http_proxy'] }}\""
+    - "Environment=\"HTTP_PROXY={{ proxy_env['http_proxy'] | default(omit) }}\""
   when: (proxy_env['http_proxy'] is defined) and (proxy_env['http_proxy'] != '') and (init_system.stdout.find('systemd') != -1)
 
 

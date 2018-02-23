@@ -7,8 +7,8 @@ proxy_env:
 #  http_proxy: http://x.x.x.x:80
 
 
-# On Debian Jessie
-apt_list_docker_url: "https://apt.dockerproject.org/repo debian-jessie main"
+# repository url
+apt_list_docker_url: "https://download.docker.com/linux"
 
 
 # user list to add to the 'docker' group

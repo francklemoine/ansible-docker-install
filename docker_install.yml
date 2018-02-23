@@ -1,6 +1,6 @@
 ---
 
-- name: install and configure docker
+- name: install/uninstall/configure docker
   hosts: docker
   roles:
     - docker
@@ -8,7 +8,7 @@
     - docker-install
 
 
-- name: install and configure docker-compose
+- name: install/uninstall/configure docker-compose
   hosts: docker
   roles:
     - docker-compose
@@ -16,7 +16,7 @@
     - docker-compose-install
 
 
-- name: install and configure docker-machine
+- name: install/uninstall docker-machine
   hosts: docker
   roles:
     - docker-machine

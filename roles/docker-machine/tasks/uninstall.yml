@@ -1,0 +1,7 @@
+---
+# roles/docker-machine/tasks/uninstall.yml
+
+- name: remove docker-machine
+  file:
+    path: /usr/local/bin/docker-machine
+    state: absent

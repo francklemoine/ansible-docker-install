@@ -1,0 +1,6 @@
+---
+# roles/docker/tasks/present.yml
+
+- include: "install.yml"
+- include: "sysinit.yml"
+- include: "start.yml"

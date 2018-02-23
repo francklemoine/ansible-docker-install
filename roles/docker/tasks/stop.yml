@@ -1,0 +1,5 @@
+---
+# roles/docker/tasks/stop.yml
+
+- name: stop docker service
+  service: name=docker state=stopped

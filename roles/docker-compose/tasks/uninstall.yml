@@ -1,0 +1,20 @@
+---
+# roles/docker-compose/tasks/uninstall.yml
+
+- name: uname -m
+  shell: uname -m
+  register: uname_m
+
+
+- name: remove docker-compose (file - x86_64)
+  file:
+    path: /usr/local/bin/docker-compose
+    state: absent
+  when: (uname_m.stdout.find('x86_64') != -1)
+
+
+- name: remove docker-compose (pip - armv7l)
+  pip:
+    name: docker-compose
+    state: absent
+  when: (uname_m.stdout.find('armv7l') != -1)

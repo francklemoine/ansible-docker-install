@@ -1,0 +1,84 @@
+---
+# roles/docker/tasks/install.yml
+
+- name: os release
+  shell: echo $(. /etc/os-release; echo "$ID")
+  register: os_release
+
+
+- name: lsb release
+  shell: lsb_release -cs
+  register: lsb_release
+
+
+- name: architecture
+  set_fact:
+    arch_var: "{% if os_release.stdout == 'raspbian' %}armhf{% else %}amd64{% endif %}"
+
+
+- assert:
+    that:
+      - 'os_release.stdout  != ""'
+      - 'lsb_release.stdout != ""'
+      - 'arch_var           != ""'
+
+
+# For future Ansible Docker facilities
+- name: install docker-py
+  environment: "{{ proxy_env }}"
+  pip:
+    name: docker
+
+
+- name: install transport https package
+  apt:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - software-properties-common
+
+
+- name: add the new gpg key
+  environment: "{{ proxy_env }}"
+  apt_key:
+    id: 0EBFCD88
+    url: https://download.docker.com/linux/{{ os_release.stdout }}/gpg
+    state: present
+
+
+- name: update the apt docker.list file
+  lineinfile:
+    state: present
+    create: yes
+    owner: root
+    group: root
+    mode: 0644
+    dest: /etc/apt/sources.list.d/docker.list
+    line: "deb [arch={{ arch_var }}] {{ apt_list_docker_url }}/{{ os_release.stdout }} {{ lsb_release.stdout }} stable"
+
+
+# update can't be done until 'apt-transport-https' package installed
+- name: install docker package
+  apt:
+    name: '{{ item }}'
+    update_cache: yes
+    state: present
+  with_items:
+    - docker-ce
+
+
+- name: add the docker group
+  group:
+    name: docker
+    state: present
+
+
+- name: add user to the docker group
+  user:
+    append: yes
+    name: "{{ item }}"
+    groups: docker
+  with_items:
+    - "{{ user2dockergroup }}"

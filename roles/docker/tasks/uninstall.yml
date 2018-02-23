@@ -1,0 +1,34 @@
+---
+# roles/docker/tasks/uninstall.yml
+
+- name: purge any older 'lxc-docker*' packages
+  ignore_errors: yes
+  apt:
+    name: 'lxc-docker*'
+    force: yes
+    purge: yes
+    state: absent
+
+
+- name: purge any older 'docker.io*' packages
+  ignore_errors: yes
+  apt:
+    name: 'docker.io*'
+    force: yes
+    purge: yes
+    state: absent
+
+
+- name: purge any older 'docker-engine' package
+  ignore_errors: yes
+  apt:
+    name: 'docker-engine'
+    force: yes
+    purge: yes
+    state: absent
+
+
+- name: remove all images/containers
+  file:
+    path: /var/lib/docker
+    state: absent

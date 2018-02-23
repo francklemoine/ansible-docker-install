@@ -1,0 +1,21 @@
+---
+# roles/docker-machine/tasks/install.yml
+
+- name: uname -s
+  action: shell uname -s
+  register: uname_s
+
+
+- name: uname -m
+  action: shell uname -m
+  register: uname_m
+
+
+- name: download docker-machine
+  environment: "{{ proxy_env }}"
+  get_url:
+    url: "https://github.com/docker/machine/releases/download/v0.13.0/docker-machine-{{ uname_s.stdout }}-{{ uname_m.stdout }}"
+    dest: "/usr/local/bin/docker-machine"
+    use_proxy: yes
+    validate_certs: no
+    mode: 0555

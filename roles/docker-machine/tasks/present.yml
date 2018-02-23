@@ -1,0 +1,4 @@
+---
+# roles/docker-machine/tasks/present.yml
+
+- include: "install.yml"

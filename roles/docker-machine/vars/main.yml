@@ -1,0 +1,5 @@
+---
+# roles/docker-machine/vars/main.yml
+# by default, we ensure that service is present, configured and running.
+# allowed values: present, absent
+state: present

@@ -1,0 +1,4 @@
+---
+# roles/docker/tasks/present.yml
+
+- include: "uninstall.yml"
